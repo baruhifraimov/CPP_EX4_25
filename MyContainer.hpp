@@ -64,7 +64,7 @@ namespace ariel{
 			 * 
 			 * @param o The object that we want to add
 			 */
-			void add(T o){
+			void add(const T& o){
 				data.push_back(o);
 			}
 
@@ -75,7 +75,7 @@ namespace ariel{
 			 * 
 			 * @param o 
 			 */
-			void remove(T o){
+			void remove(const T& o){
 				bool found_flag = false;
 				for (size_t i = 0; i < this->size(); i++)
 				{
@@ -94,9 +94,9 @@ namespace ariel{
 			/**
 			 * @brief Returns the size of the contaisn (not capacity)
 			 * 
-			 * @return int 
+			 * @return size_t (unsigned int) 
 			 */
-			int size(){
+			size_t size() const{
 				return data.size();
 			}
 
