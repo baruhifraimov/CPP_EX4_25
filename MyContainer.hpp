@@ -12,9 +12,9 @@
  * 1. AscendingOrder												X
  * 2. DescendingOrder												X
  * 3. SideCrossOrder												X
- * 4. ReverseOrder
- * 5. Order
- * 6. MiddleOutOrder
+ * 4. ReverseOrder 													X
+ * 5. Order 														X
+ * 6. MiddleOutOrder 												X
  *  METHODS:
  * 1. begin()
  * 2. end()
@@ -40,11 +40,11 @@ namespace ariel{
 			vector<T> data;
 		public:
 			// ctr
-			MyContainer();
+			MyContainer() = default;
 			// cctr
-			MyContainer(const MyContainer& o);
+			MyContainer(const MyContainer& o) : data(o.data) { }
 			// dtr
-			~MyContainer();
+			~MyContainer() = default;
 
 			/**
 			 * @brief Assign operator, part of rule of 3
@@ -53,10 +53,10 @@ namespace ariel{
 			 * @return MyContainer& 
 			 */
 			MyContainer& operator=(const MyContainer& o){
-				if (this != & &o){
-					swap(this->data, o.data);
+				if (this != &o){
+					this->data = o.data;
 				}
-				else *this;
+				return *this;
 			}
 
 			/**
@@ -111,15 +111,14 @@ namespace ariel{
 			template <typename U>
 			friend ostream& operator<<(ostream& os, const MyContainer<U>& container){
 				os<< "{";
-				size_t index = 0;
-				for (index; index < container.size()-1; index++)
-				{
-					os<< container.data.at(index);
-					os<< ", ";
+				for (size_t i = 0; i < container.data.size(); ++i) {
+				os << container.data.at(i);
+				if (i < container.data.size() - 1) {
+					os << ", ";
+					}
 				}
-				os<< container.data.at(index+1);
-
-				os<<"}" << endl;
-			}	
+				os<<"}";
+				return os;
+			}
 	};
 }
