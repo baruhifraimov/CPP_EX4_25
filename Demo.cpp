@@ -3,11 +3,11 @@
 using namespace ariel;
 int main() {
     MyContainer<int> container;
-    container.addElement(7);
-    container.addElement(15);
-    container.addElement(6);
-    container.addElement(1);
-    container.addElement(2);
+    container.add(7);
+    container.add(15);
+    container.add(6);
+    container.add(1);
+    container.add(2);
 
     std::cout << "Size of container: " << container.size() << std::endl;
 
