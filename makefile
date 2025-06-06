@@ -22,8 +22,8 @@ test:
 
 # Clean up built files
 clean:
-	rm -f $(TARGET)
-	rm -rf $(TARGET).dSYM
+	@rm -f $(TARGET)
+	@rm -rf $(TARGET).dSYM
 
 # Tell make these aren't file names
 .PHONY: all clean valgrind test

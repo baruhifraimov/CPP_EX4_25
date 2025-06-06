@@ -1,18 +1,10 @@
+// baruh.ifraimov@gmail.com
 #pragma once
-/**
- * TODO:
- * ITERATORS:
- * 1. AscendingOrder												X
- * 2. DescendingOrder												X
- * 3. SideCrossOrder												X
- * 4. ReverseOrder 													X
- * 5. Order 														X
- * 6. MiddleOutOrder 												X
- * 
- * */
+
 #include <iostream>
 #include <vector>
 #include <stdexcept>
+#include <algorithm> 
 
 using namespace std;
 
@@ -29,6 +21,7 @@ namespace ariel{
 			class SideCrossOrder;												
 			class ReverseOrder;												
 			class MiddleOutOrder;
+
 			// ctr
 			MyContainer() = default;
 			// cctr
@@ -93,13 +86,11 @@ namespace ariel{
 			/**
 			 * @brief Helper operator to print the container
 			 * 
-			 * @tparam U 
 			 * @param os 
 			 * @param container The container
 			 * @return ostream& 
 			 */
-			template <typename U>
-			friend ostream& operator<<(ostream& os, const MyContainer<U>& container){
+			friend ostream& operator<<(ostream& os, const MyContainer<T>& container){
 				os<< "{";
 				for (size_t i = 0; i < container.size(); ++i) {
 				os << container.data.at(i);
@@ -219,21 +210,36 @@ namespace ariel{
 				return MiddleOutOrder(this, data.size());
 			}
 
+			/*
+			* ===============================================================================                        
+			*       				         ITERATORS SECTION                 
+			* ===============================================================================
+			*/
+
 			class Order{
 				private:
 					MyContainer* container;
 					size_t current_index;
-				public:
-					Order(MyContainer* cont, size_t index) : 	container(cont),
-																current_index(index) {}
+				public:				// ctor
+				Order(MyContainer* cont, size_t index) : current_index(index) {
+					if (cont == nullptr) {
+						throw std::invalid_argument("Container pointer cannot be null");
+					}
+					container = cont;
+				}
 					Order(const Order& o) : container(o.container), 
 											current_index(o.current_index) {}
+					~Order() = default;
 					/**
 					 * @brief Dereference operator
 					 * 
 					 * @return T&* the current element
+					 * @throws std::out_of_range if iterator is at end position
 					 */
 					T& operator*(){
+						if (current_index >= container->data.size()) {
+							throw std::out_of_range("Iterator is at end position - cannot dereference");
+						}
 						return container->data.at(current_index);
 					}
 					
@@ -241,8 +247,12 @@ namespace ariel{
 					 * @brief const Dereference operator 
 					 * 
 					 * @return const T& the current element in const
+					 * @throws std::out_of_range if iterator is at end position
 					 */
 					const T& operator*() const {
+						if (current_index >= container->data.size()) {
+							throw std::out_of_range("Iterator is at end position - cannot dereference");
+						}
 						return container->data.at(current_index);
 					}
 
@@ -250,8 +260,12 @@ namespace ariel{
 					 * @brief Pre increment
 					 * 
 					 * @return Order& returns the exact Iterator
+					 * @throws std::out_of_range if incrementing past end
 					 */
 					Order& operator++(){
+						if (current_index >= container->data.size()) {
+							throw std::out_of_range("Cannot increment iterator past end");
+						}
 						++current_index;
 						return *this;
 					}
@@ -310,20 +324,31 @@ namespace ariel{
 					vector<T> sorted_data;
 					size_t current_index;
 				public:
+					// ctor
 					AscendingOrder( MyContainer* cont, size_t index) : current_index(index) {
+						if (cont == nullptr) {
+							throw std::invalid_argument("Container pointer cannot be null");
+						}
 						sorted_data = cont->data;
 						sort(sorted_data.begin(), sorted_data.end());
 					}
 
+					// cctor
 					AscendingOrder(const AscendingOrder& o) : 	sorted_data(o.sorted_data), 
-																current_index(o.current_index) {
-					}
+																current_index(o.current_index) {}
+
+					// dtor
+					~AscendingOrder() = default;
 					/**
 					 * @brief Dereference operator
 					 * 
 					 * @return T&* the current element
+					 * @throws std::out_of_range if iterator is at end position
 					 */
 					T& operator*(){
+						if (current_index >= sorted_data.size()) {
+							throw std::out_of_range("Iterator is at end position - cannot dereference");
+						}
 						return sorted_data.at(current_index);
 					}
 					
@@ -331,8 +356,12 @@ namespace ariel{
 					 * @brief const Dereference operator 
 					 * 
 					 * @return const T& the current element in const
+					 * @throws std::out_of_range if iterator is at end position
 					 */
 					const T& operator*() const {
+						if (current_index >= sorted_data.size()) {
+							throw std::out_of_range("Iterator is at end position - cannot dereference");
+						}
 						return sorted_data.at(current_index);
 					}
 
@@ -340,8 +369,12 @@ namespace ariel{
 					 * @brief Pre increment
 					 * 
 					 * @return Order& returns the exact Iterator
+					 * @throws std::out_of_range if incrementing past end
 					 */
 					AscendingOrder& operator++(){
+						if (current_index >= sorted_data.size()) {
+							throw std::out_of_range("Cannot increment iterator past end");
+						}
 						++current_index;
 						return *this;
 					}
@@ -400,21 +433,34 @@ namespace ariel{
 					vector<T> sorted_data;
 					size_t current_index;
 				public:
+					// ctor
 					DescendingOrder(MyContainer* cont, size_t index) : current_index(index) {
+						if (cont == nullptr) {
+							throw std::invalid_argument("Container pointer cannot be null");
+						}
 						sorted_data = cont->data;
 						sort(sorted_data.begin(), sorted_data.end());
 						reverse(sorted_data.begin(), sorted_data.end());
 					}
 
+					// cctor
 					DescendingOrder(const DescendingOrder& o) : 	sorted_data(o.sorted_data), 
 																current_index(o.current_index) {
 					}
+					
+					// dtor
+					~DescendingOrder() = default;
+
 					/**
 					 * @brief Dereference operator
 					 * 
 					 * @return T&* the current element
+					 * @throws std::out_of_range if iterator is at end position
 					 */
 					T& operator*(){
+						if (current_index >= sorted_data.size()) {
+							throw std::out_of_range("Iterator is at end position - cannot dereference");
+						}
 						return sorted_data.at(current_index);
 					}
 					
@@ -422,8 +468,12 @@ namespace ariel{
 					 * @brief const Dereference operator 
 					 * 
 					 * @return const T& the current element in const
+					 * @throws std::out_of_range if iterator is at end position
 					 */
 					const T& operator*() const {
+						if (current_index >= sorted_data.size()) {
+							throw std::out_of_range("Iterator is at end position - cannot dereference");
+						}
 						return sorted_data.at(current_index);
 					}
 
@@ -431,8 +481,12 @@ namespace ariel{
 					 * @brief Pre increment
 					 * 
 					 * @return Order& returns the exact Iterator
+					 * @throws std::out_of_range if incrementing past end
 					 */
 					DescendingOrder& operator++(){
+						if (current_index >= sorted_data.size()) {
+							throw std::out_of_range("Cannot increment iterator past end");
+						}
 						++current_index;
 						return *this;
 					}
@@ -491,20 +545,33 @@ namespace ariel{
 				vector<T> sorted_data;
 				size_t current_index;
 			public:
+				// ctor
 				ReverseOrder(MyContainer* cont, size_t index) : current_index(index) {
+					if (cont == nullptr) {
+						throw std::invalid_argument("Container pointer cannot be null");
+					}
 					sorted_data = cont->data;
 					reverse(sorted_data.begin(), sorted_data.end());
 				}
 
+				// cctor
 				ReverseOrder(const ReverseOrder& o) : 	sorted_data(o.sorted_data), 
 															current_index(o.current_index) {
 				}
+				
+				// dtor
+				~ReverseOrder() = default;
+
 				/**
 				 * @brief Dereference operator
 				 * 
 				 * @return T&* the current element
+				 * @throws std::out_of_range if iterator is at end position
 				 */
 				T& operator*(){
+					if (current_index >= sorted_data.size()) {
+						throw std::out_of_range("Iterator is at end position - cannot dereference");
+					}
 					return sorted_data.at(current_index);
 				}
 				
@@ -512,8 +579,12 @@ namespace ariel{
 				 * @brief const Dereference operator 
 				 * 
 				 * @return const T& the current element in const
+				 * @throws std::out_of_range if iterator is at end position
 				 */
 				const T& operator*() const {
+					if (current_index >= sorted_data.size()) {
+						throw std::out_of_range("Iterator is at end position - cannot dereference");
+					}
 					return sorted_data.at(current_index);
 				}
 
@@ -521,8 +592,12 @@ namespace ariel{
 				 * @brief Pre increment
 				 * 
 				 * @return Order& returns the exact Iterator
+				 * @throws std::out_of_range if incrementing past end
 				 */
 				ReverseOrder& operator++(){
+					if (current_index >= sorted_data.size()) {
+						throw std::out_of_range("Cannot increment iterator past end");
+					}
 					++current_index;
 					return *this;
 				}
@@ -582,24 +657,41 @@ namespace ariel{
 					size_t left_index, right_index,current_index;
 					bool turn_flag; // indicates the current index; if its left (true) or right (false)
 				public:
+					// ctor
 					SideCrossOrder(const MyContainer* cont, size_t index) : current_index(index){
+						if (cont == nullptr) {
+							throw std::invalid_argument("Container pointer cannot be null");
+						}
 						sorted_data = cont->data;
 						sort(sorted_data.begin(),sorted_data.end());
 						turn_flag = true;
 						left_index = 0;
-						right_index = sorted_data.size()-1;
+						right_index = sorted_data.size() > 0 ? sorted_data.size()-1 : 0;
 					}
+
+					// cctor
 					SideCrossOrder(const SideCrossOrder& o) : sorted_data(o.sorted_data), 
 											current_index(o.current_index),
 											left_index(o.left_index),
 											right_index(o.right_index),
 											turn_flag(o.turn_flag) {}
+					
+					// dtor
+					~SideCrossOrder() = default;
+
 					/**
 					 * @brief Dereference operator
 					 * 
 					 * @return T&* the current element
+					 * @throws std::out_of_range if iterator is at end position
 					 */
 					T& operator*(){
+						if (sorted_data.empty()) {
+							throw std::out_of_range("Cannot dereference iterator on empty container");
+						}
+						if (left_index > right_index) {
+							throw std::out_of_range("Iterator is at end position - cannot dereference");
+						}
 						if(turn_flag){
 							current_index = left_index;
 						}else{
@@ -612,22 +704,35 @@ namespace ariel{
 					 * @brief const Dereference operator 
 					 * 
 					 * @return const T& the current element in const
+					 * @throws std::out_of_range if iterator is at end position
 					 */
 					const T& operator*() const {
+						if (sorted_data.empty()) {
+							throw std::out_of_range("Cannot dereference iterator on empty container");
+						}
+						if (left_index > right_index) {
+							throw std::out_of_range("Iterator is at end position - cannot dereference");
+						}
 						if(turn_flag){
 							current_index = left_index;
 						}else{
 							current_index = right_index;
 						}
-						return sorted_data.data.at(current_index);
+						return sorted_data.at(current_index);
 					}
 
 					/**
-					 * @brief Pre increment
+					 * @brief Moves to the next element in side-cross pattern
+					 * This function alternates between taking elements from the left side 
+					 * and right side of a sorted container.
 					 * 
 					 * @return SideCrossOrder& returns the exact Iterator
+					 * @throws std::out_of_range if incrementing past end
 					 */
 					SideCrossOrder& operator++(){
+						if (left_index > right_index) {
+							throw std::out_of_range("Cannot increment iterator past end");
+						}
 						if(turn_flag){
 							current_index = left_index++;
 							turn_flag = false;
@@ -639,7 +744,9 @@ namespace ariel{
 					}
 
 					/**
-					 * @brief Post increment
+					 * @brief Moves to the next element in side-cross pattern
+					 * This function alternates between taking elements from the left side 
+					 * and right side of a sorted container.
 					 * 
 					 * @return SideCrossOrder, returns a copy of the last Iterator 
 					 */
@@ -681,8 +788,9 @@ namespace ariel{
 						if(this != &o){ // safe check if we are the same object
 							this->sorted_data = o.sorted_data;
 							this->current_index = o.current_index;
+							this->right_index = o.right_index;
+							this->turn_flag = o.turn_flag;  
 						}
-
 						return *this;
 					}
 
@@ -690,40 +798,60 @@ namespace ariel{
 
 			class MiddleOutOrder{
 				private:
-					vector<T> sorted_data;
+					vector<T> container;
 					size_t current_index, counter;
 					bool turn_flag; // indicates the current index; if its left (true) or right (false)
 				public:
+					// ctor
 					MiddleOutOrder(const MyContainer* cont, size_t index) : current_index(index){
-						sorted_data = cont->data;
+						if (cont == nullptr) {
+							throw std::invalid_argument("Container pointer cannot be null");
+						}
+						container = cont->data;
 						counter = 0;
 						turn_flag = true;
 					}
-					MiddleOutOrder(const MiddleOutOrder& o) : sorted_data(o.sorted_data), 
+
+					// cctor
+					MiddleOutOrder(const MiddleOutOrder& o) : container(o.container), 
 											current_index(o.current_index),
 											counter(o.counter),
 											turn_flag(o.turn_flag) {}
+
+					// dtor
+					~MiddleOutOrder() = default;
 
 					/**
 					 * @brief Dereference operator
 					 * 
 					 * @return T&* the current element
+					 * @throws std::out_of_range if iterator is at end position
 					 */
 					T& operator*(){
-						return sorted_data.at(current_index);
+						if (current_index >= container.size()) {
+							throw std::out_of_range("Iterator is at end position - cannot dereference");
+						}
+						return container.at(current_index);
 					}
 					
 					/**
 					 * @brief const Dereference operator 
 					 * 
 					 * @return const T& the current element in const
+					 * @throws std::out_of_range if iterator is at end position
 					 */
 					const T& operator*() const {
-						return sorted_data.at(current_index);
+						if (current_index >= container.size()) {
+							throw std::out_of_range("Iterator is at end position - cannot dereference");
+						}
+						return container.at(current_index);
 					}
 
 					/**
 					 * @brief Pre increment
+					 * Starts from the middle then goes left and right according to the
+					 * turn_flag, checks each time if it goes out of bounds
+					 * if true, assigning to the index the end of the iteration to stop the iterator
 					 * 
 					 * @return MiddleOutOrder& returns the exact Iterator
 					 */
@@ -733,14 +861,14 @@ namespace ariel{
 							current_index -= ++counter;
 							turn_flag = false;
 							}else {
-							current_index = sorted_data.size();
+							current_index = container.size();
 							}
 						}else{
-							if(current_index + counter < sorted_data.size()){ // check if we not going out of bounds again
+							if(current_index + counter < container.size()){ // check if we not going out of bounds again
 							current_index += ++counter;
 							turn_flag = true;
 							}else {
-								current_index = sorted_data.size();
+								current_index = container.size();
 							}
 						}
 						return *this;
@@ -748,6 +876,9 @@ namespace ariel{
 
 					/**
 					 * @brief Post increment
+					 * Starts from the middle then goes left and right according to the
+					 * turn_flag, checks each time if it goes out of bounds
+					 * if true, assigning to the index the end of the iteration to stop the iterator
 					 * 
 					 * @return MiddleOutOrder, returns a copy of the last Iterator 
 					 */
@@ -765,7 +896,7 @@ namespace ariel{
 					 * @return false else
 					 */
 					bool operator==(const MiddleOutOrder& o){
-						return ((sorted_data == o.sorted_data) && (current_index == o.current_index));
+						return ((container == o.container) && (current_index == o.current_index));
 					}
 
 					/**
@@ -787,10 +918,11 @@ namespace ariel{
 					 */
 					MiddleOutOrder& operator=(const MiddleOutOrder& o){
 						if(this != &o){ // safe check if we are the same object
-							this->sorted_data = o.sorted_data;
+							this->container = o.container;
 							this->current_index = o.current_index;
+							this->counter = o.counter;
+        					this->turn_flag = o.turn_flag;
 						}
-
 						return *this;
 					}
 
