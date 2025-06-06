@@ -242,19 +242,6 @@ namespace ariel{
 						}
 						return container->data.at(current_index);
 					}
-					
-					/**
-					 * @brief const Dereference operator 
-					 * 
-					 * @return const T& the current element in const
-					 * @throws std::out_of_range if iterator is at end position
-					 */
-					const T& operator*() const {
-						if (current_index >= container->data.size()) {
-							throw std::out_of_range("Iterator is at end position - cannot dereference");
-						}
-						return container->data.at(current_index);
-					}
 
 					/**
 					 * @brief Pre increment
@@ -346,19 +333,6 @@ namespace ariel{
 					 * @throws std::out_of_range if iterator is at end position
 					 */
 					T& operator*(){
-						if (current_index >= sorted_data.size()) {
-							throw std::out_of_range("Iterator is at end position - cannot dereference");
-						}
-						return sorted_data.at(current_index);
-					}
-					
-					/**
-					 * @brief const Dereference operator 
-					 * 
-					 * @return const T& the current element in const
-					 * @throws std::out_of_range if iterator is at end position
-					 */
-					const T& operator*() const {
 						if (current_index >= sorted_data.size()) {
 							throw std::out_of_range("Iterator is at end position - cannot dereference");
 						}
@@ -463,19 +437,6 @@ namespace ariel{
 						}
 						return sorted_data.at(current_index);
 					}
-					
-					/**
-					 * @brief const Dereference operator 
-					 * 
-					 * @return const T& the current element in const
-					 * @throws std::out_of_range if iterator is at end position
-					 */
-					const T& operator*() const {
-						if (current_index >= sorted_data.size()) {
-							throw std::out_of_range("Iterator is at end position - cannot dereference");
-						}
-						return sorted_data.at(current_index);
-					}
 
 					/**
 					 * @brief Pre increment
@@ -569,19 +530,6 @@ namespace ariel{
 				 * @throws std::out_of_range if iterator is at end position
 				 */
 				T& operator*(){
-					if (current_index >= sorted_data.size()) {
-						throw std::out_of_range("Iterator is at end position - cannot dereference");
-					}
-					return sorted_data.at(current_index);
-				}
-				
-				/**
-				 * @brief const Dereference operator 
-				 * 
-				 * @return const T& the current element in const
-				 * @throws std::out_of_range if iterator is at end position
-				 */
-				const T& operator*() const {
 					if (current_index >= sorted_data.size()) {
 						throw std::out_of_range("Iterator is at end position - cannot dereference");
 					}
@@ -700,26 +648,6 @@ namespace ariel{
 						return sorted_data.at(current_index);
 					}
 					
-					/**
-					 * @brief const Dereference operator 
-					 * 
-					 * @return const T& the current element in const
-					 * @throws std::out_of_range if iterator is at end position
-					 */
-					const T& operator*() const {
-						if (sorted_data.empty()) {
-							throw std::out_of_range("Cannot dereference iterator on empty container");
-						}
-						if (left_index > right_index) {
-							throw std::out_of_range("Iterator is at end position - cannot dereference");
-						}
-						if(turn_flag){
-							current_index = left_index;
-						}else{
-							current_index = right_index;
-						}
-						return sorted_data.at(current_index);
-					}
 
 					/**
 					 * @brief Moves to the next element in side-cross pattern
@@ -828,19 +756,6 @@ namespace ariel{
 					 * @throws std::out_of_range if iterator is at end position
 					 */
 					T& operator*(){
-						if (current_index >= container.size()) {
-							throw std::out_of_range("Iterator is at end position - cannot dereference");
-						}
-						return container.at(current_index);
-					}
-					
-					/**
-					 * @brief const Dereference operator 
-					 * 
-					 * @return const T& the current element in const
-					 * @throws std::out_of_range if iterator is at end position
-					 */
-					const T& operator*() const {
 						if (current_index >= container.size()) {
 							throw std::out_of_range("Iterator is at end position - cannot dereference");
 						}

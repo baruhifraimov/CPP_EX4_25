@@ -21,10 +21,6 @@ test: test.cpp
 	$(CXX) $(CXXFLAGS) -o test.out test.cpp
 	./test.out
 
-# Build test executable only
-test-build: test.cpp
-	$(CXX) $(CXXFLAGS) -o test.out test.cpp
-
 # Main target (for README requirement: make Main)
 Main: $(TARGET)
 	./$(TARGET)
@@ -37,4 +33,4 @@ clean:
 	@rm -rf test.out.dSYM
 
 # Tell make these aren't file names
-.PHONY: all clean valgrind test test-build Main
+.PHONY: all clean valgrind test Main
