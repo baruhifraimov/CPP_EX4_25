@@ -26,7 +26,7 @@ This project implements a generic template-based container class `MyContainer` i
 ## File Structure
 
 ```
-CPP_EX4_25/
+MyContainerCPP/
 ├── MyContainer.hpp   # Container implementation
 ├── main.cpp          # Showcase
 ├── test.cpp          # Test suite
