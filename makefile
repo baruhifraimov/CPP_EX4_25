@@ -15,6 +15,7 @@ $(TARGET): main.cpp
 # Valgrind memory check
 valgrind: $(TARGET)
 	valgrind --leak-check=full --show-leak-kinds=all ./$(TARGET)
+	valgrind --leak-check=full --show-leak-kinds=all ./test.out
 
 # Test build and run
 test: test.cpp

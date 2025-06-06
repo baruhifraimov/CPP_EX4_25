@@ -189,6 +189,9 @@ namespace ariel{
 			 * @return Order 
 			 */
 			SideCrossOrder end_side_cross_order(){
+				if(data.size() <= 1){
+					return SideCrossOrder(this, data.size());
+				}
 				return SideCrossOrder(this, data.size()/2);
 			}
 
@@ -275,7 +278,7 @@ namespace ariel{
 					 * @return true If equal
 					 * @return false else
 					 */
-					bool operator==(const Order& o){
+					bool operator==(const Order& o) const{
 						return ((container == o.container) && (current_index == o.current_index));
 					}
 
@@ -286,7 +289,7 @@ namespace ariel{
 					 * @return true If not equal
 					 * @return false else
 					 */
-					bool operator!=(const Order& o){
+					bool operator!=(const Order& o) const{
 						return (!(*this == o));
 					}
 
@@ -371,7 +374,7 @@ namespace ariel{
 					 * @return true If equal
 					 * @return false else
 					 */
-					bool operator==(const AscendingOrder& o){
+					bool operator==(const AscendingOrder& o) const{
 						return ((sorted_data == o.sorted_data) && (current_index == o.current_index));
 					}
 
@@ -382,7 +385,7 @@ namespace ariel{
 					 * @return true If not equal
 					 * @return false else
 					 */
-					bool operator!=(const AscendingOrder& o){
+					bool operator!=(const AscendingOrder& o) const{
 						return (!(*this == o));
 					}
 
@@ -470,7 +473,7 @@ namespace ariel{
 					 * @return true If equal
 					 * @return false else
 					 */
-					bool operator==(const DescendingOrder& o){
+					bool operator==(const DescendingOrder& o) const{
 						return ((sorted_data == o.sorted_data) && (current_index == o.current_index));
 					}
 
@@ -481,7 +484,7 @@ namespace ariel{
 					 * @return true If not equal
 					 * @return false else
 					 */
-					bool operator!=(const DescendingOrder& o){
+					bool operator!=(const DescendingOrder& o) const{
 						return (!(*this == o));
 					}
 
@@ -568,7 +571,7 @@ namespace ariel{
 				 * @return true If equal
 				 * @return false else
 				 */
-				bool operator==(const ReverseOrder& o){
+				bool operator==(const ReverseOrder& o) const{
 					return ((sorted_data == o.sorted_data) && (current_index == o.current_index));
 				}
 
@@ -579,7 +582,7 @@ namespace ariel{
 				 * @return true If not equal
 				 * @return false else
 				 */
-				bool operator!=(const ReverseOrder& o){
+				bool operator!=(const ReverseOrder& o) const{
 					return (!(*this == o));
 				}
 
@@ -619,9 +622,9 @@ namespace ariel{
 
 					// cctor
 					SideCrossOrder(const SideCrossOrder& o) : sorted_data(o.sorted_data), 
-											current_index(o.current_index),
 											left_index(o.left_index),
 											right_index(o.right_index),
+											current_index(o.current_index),
 											turn_flag(o.turn_flag) {}
 					
 					// dtor
@@ -637,7 +640,7 @@ namespace ariel{
 						if (sorted_data.empty()) {
 							throw std::out_of_range("Cannot dereference iterator on empty container");
 						}
-						if (left_index > right_index) {
+						if (current_index >= sorted_data.size() || left_index > right_index) {
 							throw std::out_of_range("Iterator is at end position - cannot dereference");
 						}
 						if(turn_flag){
@@ -658,10 +661,13 @@ namespace ariel{
 					 * @throws std::out_of_range if incrementing past end
 					 */
 					SideCrossOrder& operator++(){
-						if (left_index > right_index) {
+						if (current_index >= sorted_data.size() || left_index > right_index) {
 							throw std::out_of_range("Cannot increment iterator past end");
 						}
-						if(turn_flag){
+						else if(sorted_data.size() == 1){
+							current_index++;
+						}
+						else if(turn_flag){
 							current_index = left_index++;
 							turn_flag = false;
 						}else{
@@ -691,7 +697,7 @@ namespace ariel{
 					 * @return true If equal
 					 * @return false else
 					 */
-					bool operator==(const SideCrossOrder& o){
+					bool operator==(const SideCrossOrder& o) const{
 						return ((sorted_data == o.sorted_data) && (current_index == o.current_index));
 					}
 
@@ -702,7 +708,7 @@ namespace ariel{
 					 * @return true If not equal
 					 * @return false else
 					 */
-					bool operator!=(const SideCrossOrder& o){
+					bool operator!=(const SideCrossOrder& o) const{
 						return (!(*this == o));
 					}
 
@@ -717,6 +723,7 @@ namespace ariel{
 							this->sorted_data = o.sorted_data;
 							this->current_index = o.current_index;
 							this->right_index = o.right_index;
+							this->left_index = o.left_index;
 							this->turn_flag = o.turn_flag;  
 						}
 						return *this;
@@ -810,7 +817,7 @@ namespace ariel{
 					 * @return true If equal
 					 * @return false else
 					 */
-					bool operator==(const MiddleOutOrder& o){
+					bool operator==(const MiddleOutOrder& o) const{
 						return ((container == o.container) && (current_index == o.current_index));
 					}
 
@@ -821,7 +828,7 @@ namespace ariel{
 					 * @return true If not equal
 					 * @return false else
 					 */
-					bool operator!=(const MiddleOutOrder& o){
+					bool operator!=(const MiddleOutOrder& o) const{
 						return (!(*this == o));
 					}
 

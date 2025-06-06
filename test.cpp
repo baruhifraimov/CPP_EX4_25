@@ -584,3 +584,494 @@ TEST_CASE("Error Handling") {
     }
 }
 
+TEST_CASE("Post-Increment Operators") {
+    SUBCASE("Order post-increment") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        container.add(3);
+        
+        auto it = container.begin_order();
+        auto old_it = it++;
+        CHECK(*old_it == 1); // Old iterator should point to first element
+        CHECK(*it == 2); // New iterator should point to second element
+    }
+    
+    SUBCASE("AscendingOrder post-increment") {
+        MyContainer<int> container;
+        container.add(3);
+        container.add(1);
+        container.add(2);
+        
+        auto it = container.begin_ascending_order();
+        auto old_it = it++;
+        CHECK(*old_it == 1); // Old iterator should point to smallest element
+        CHECK(*it == 2); // New iterator should point to second smallest
+    }
+    
+    SUBCASE("DescendingOrder post-increment") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(3);
+        container.add(2);
+        
+        auto it = container.begin_descending_order();
+        auto old_it = it++;
+        CHECK(*old_it == 3); // Old iterator should point to largest element
+        CHECK(*it == 2); // New iterator should point to second largest
+    }
+    
+    SUBCASE("ReverseOrder post-increment") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        container.add(3);
+        
+        auto it = container.begin_reverse_order();
+        auto old_it = it++;
+        CHECK(*old_it == 3); // Old iterator should point to last inserted element
+        CHECK(*it == 2); // New iterator should point to second-to-last
+    }
+    
+    SUBCASE("SideCrossOrder post-increment") {
+        MyContainer<int> container;
+        container.add(2);
+        container.add(1);
+        container.add(3);
+        
+        auto it = container.begin_side_cross_order();
+        auto old_it = it++;
+        CHECK(*old_it == 1); // Should start with smallest
+        CHECK(*it == 3); // Should move to largest
+    }
+    
+    SUBCASE("MiddleOutOrder post-increment") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        container.add(3);
+        
+        auto it = container.begin_middle_out_order();
+        auto old_it = it++;
+        CHECK(*old_it == 2); // Should start with middle element
+    }
+}
+
+TEST_CASE("Iterator Assignment Operators") {
+    SUBCASE("Order assignment") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        
+        auto it1 = container.begin_order();
+        auto it2 = container.end_order();
+        it2 = it1;
+        CHECK(it1 == it2); // Should be equal after assignment
+        CHECK(*it2 == 1); // Should point to same element
+    }
+    
+    SUBCASE("AscendingOrder assignment") {
+        MyContainer<int> container;
+        container.add(2);
+        container.add(1);
+        
+        auto it1 = container.begin_ascending_order();
+        auto it2 = container.end_ascending_order();
+        it2 = it1;
+        CHECK(it1 == it2); // Should be equal after assignment
+    }
+    
+    SUBCASE("DescendingOrder assignment") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        
+        auto it1 = container.begin_descending_order();
+        auto it2 = container.end_descending_order();
+        it2 = it1;
+        CHECK(it1 == it2); // Should be equal after assignment
+    }
+    
+    SUBCASE("ReverseOrder assignment") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        
+        auto it1 = container.begin_reverse_order();
+        auto it2 = container.end_reverse_order();
+        it2 = it1;
+        CHECK(it1 == it2); // Should be equal after assignment
+    }
+    
+    SUBCASE("SideCrossOrder assignment") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        
+        auto it1 = container.begin_side_cross_order();
+        auto it2 = container.end_side_cross_order();
+        it2 = it1;
+        CHECK(it1 == it2); // Should be equal after assignment
+    }
+    
+    SUBCASE("MiddleOutOrder assignment") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        
+        auto it1 = container.begin_middle_out_order();
+        auto it2 = container.end_middle_out_order();
+        it2 = it1;
+        CHECK(it1 == it2); // Should be equal after assignment
+    }
+    
+    SUBCASE("Self-assignment safety") {
+        MyContainer<int> container;
+        container.add(42);
+        
+        auto it = container.begin_order();
+        it = it; // Self-assignment should be safe
+        CHECK(*it == 42); // Should still work after self-assignment
+    }
+}
+
+TEST_CASE("Iterator Copy Constructors") {
+    SUBCASE("Order copy constructor") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        
+        auto it1 = container.begin_order();
+        auto it2(it1); // Copy constructor
+        CHECK(it1 == it2); // Should be equal
+        CHECK(*it2 == 1); // Should point to same element
+        
+        ++it1;
+        CHECK(it1 != it2); // Should be different after incrementing one
+    }
+    
+    SUBCASE("AscendingOrder copy constructor") {
+        MyContainer<int> container;
+        container.add(3);
+        container.add(1);
+        
+        auto it1 = container.begin_ascending_order();
+        auto it2(it1); // Copy constructor
+        CHECK(it1 == it2); // Should be equal
+        CHECK(*it2 == 1); // Should point to smallest element
+    }
+    
+    SUBCASE("DescendingOrder copy constructor") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(3);
+        
+        auto it1 = container.begin_descending_order();
+        auto it2(it1); // Copy constructor
+        CHECK(it1 == it2); // Should be equal
+        CHECK(*it2 == 3); // Should point to largest element
+    }
+    
+    SUBCASE("ReverseOrder copy constructor") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        
+        auto it1 = container.begin_reverse_order();
+        auto it2(it1); // Copy constructor
+        CHECK(it1 == it2); // Should be equal
+        CHECK(*it2 == 2); // Should point to last inserted element
+    }
+    
+    SUBCASE("SideCrossOrder copy constructor") {
+        MyContainer<int> container;
+        container.add(2);
+        container.add(1);
+        
+        auto it1 = container.begin_side_cross_order();
+        auto it2(it1); // Copy constructor
+        CHECK(it1 == it2); // Should be equal
+        CHECK(*it2 == 1); // Should point to smallest element
+    }
+    
+    SUBCASE("MiddleOutOrder copy constructor") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        container.add(3);
+        
+        auto it1 = container.begin_middle_out_order();
+        auto it2(it1); // Copy constructor
+        CHECK(it1 == it2); // Should be equal
+        CHECK(*it2 == 2); // Should point to middle element
+    }
+}
+
+TEST_CASE("Empty Container Iterator Edge Cases") {
+    SUBCASE("All empty iterators equal their end") {
+        MyContainer<int> container;
+        
+        CHECK(container.begin_order() == container.end_order());
+        CHECK(container.begin_ascending_order() == container.end_ascending_order());
+        CHECK(container.begin_descending_order() == container.end_descending_order());
+        CHECK(container.begin_reverse_order() == container.end_reverse_order());
+        CHECK(container.begin_side_cross_order() == container.end_side_cross_order());
+        CHECK(container.begin_middle_out_order() == container.end_middle_out_order());
+    }
+    
+    SUBCASE("Empty container dereference errors") {
+        MyContainer<int> container;
+        
+        CHECK_THROWS_AS(*container.begin_order(), std::out_of_range);
+        CHECK_THROWS_AS(*container.begin_ascending_order(), std::out_of_range);
+        CHECK_THROWS_AS(*container.begin_descending_order(), std::out_of_range);
+        CHECK_THROWS_AS(*container.begin_reverse_order(), std::out_of_range);
+        CHECK_THROWS_AS(*container.begin_side_cross_order(), std::out_of_range);
+        CHECK_THROWS_AS(*container.begin_middle_out_order(), std::out_of_range);
+    }
+    
+    SUBCASE("Empty container increment errors") {
+        MyContainer<int> container;
+        
+        auto order_it = container.begin_order();
+        CHECK_THROWS_AS(++order_it, std::out_of_range);
+        
+        auto asc_it = container.begin_ascending_order();
+        CHECK_THROWS_AS(++asc_it, std::out_of_range);
+        
+        auto desc_it = container.begin_descending_order();
+        CHECK_THROWS_AS(++desc_it, std::out_of_range);
+        
+        auto rev_it = container.begin_reverse_order();
+        CHECK_THROWS_AS(++rev_it, std::out_of_range);
+        
+        auto side_it = container.begin_side_cross_order();
+        CHECK_THROWS_AS(++++side_it, std::out_of_range);
+    }
+}
+
+TEST_CASE("Container Boundary Conditions") {
+    SUBCASE("Single element all iterators") {
+        MyContainer<int> container;
+        container.add(42);
+        
+        // All single-element iterations should return the same element
+        vector<int> order_result, asc_result, desc_result, rev_result, side_result, middle_result;
+        
+        for (auto it = container.begin_order(); it != container.end_order(); ++it) {
+            order_result.push_back(*it);
+        }
+        for (auto it = container.begin_ascending_order(); it != container.end_ascending_order(); ++it) {
+            asc_result.push_back(*it);
+        }
+        for (auto it = container.begin_descending_order(); it != container.end_descending_order(); ++it) {
+            desc_result.push_back(*it);
+        }
+        for (auto it = container.begin_reverse_order(); it != container.end_reverse_order(); ++it) {
+            rev_result.push_back(*it);
+        }
+        for (auto it = container.begin_side_cross_order(); it != container.end_side_cross_order(); ++it) {
+            side_result.push_back(*it);
+        }
+        for (auto it = container.begin_middle_out_order(); it != container.end_middle_out_order(); ++it) {
+            middle_result.push_back(*it);
+        }
+        
+        vector<int> expected = {42};
+        CHECK(order_result == expected);
+        CHECK(asc_result == expected);
+        CHECK(desc_result == expected);
+        CHECK(rev_result == expected);
+        CHECK(side_result == expected);
+        CHECK(middle_result == expected);
+    }
+    
+    SUBCASE("Two elements - all iterator behaviors") {
+        MyContainer<int> container;
+        container.add(2);
+        container.add(1);
+        
+        vector<int> order_result, asc_result, desc_result, rev_result, side_result, middle_result;
+        
+        for (auto it = container.begin_order(); it != container.end_order(); ++it) {
+            order_result.push_back(*it);
+        }
+        for (auto it = container.begin_ascending_order(); it != container.end_ascending_order(); ++it) {
+            asc_result.push_back(*it);
+        }
+        for (auto it = container.begin_descending_order(); it != container.end_descending_order(); ++it) {
+            desc_result.push_back(*it);
+        }
+        for (auto it = container.begin_reverse_order(); it != container.end_reverse_order(); ++it) {
+            rev_result.push_back(*it);
+        }
+        for (auto it = container.begin_side_cross_order(); it != container.end_side_cross_order(); ++it) {
+            side_result.push_back(*it);
+        }
+        for (auto it = container.begin_middle_out_order(); it != container.end_middle_out_order(); ++it) {
+            middle_result.push_back(*it);
+        }
+        
+        CHECK(order_result == vector<int>({2, 1})); // Insertion order
+        CHECK(asc_result == vector<int>({1, 2})); // Ascending
+        CHECK(desc_result == vector<int>({2, 1})); // Descending
+        CHECK(rev_result == vector<int>({1, 2})); // Reverse insertion
+        CHECK(side_result == vector<int>({1, 2})); // Side cross: min, max
+        CHECK(middle_result == vector<int>({1, 2})); // Middle out from index 1
+    }
+}
+
+TEST_CASE("Iterator Increment Edge Cases") {
+    SUBCASE("Multiple increments to end") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        
+        auto it = container.begin_order();
+        CHECK(*it == 1);
+        ++it;
+        CHECK(*it == 2);
+        ++it; // Should be at end now
+        CHECK(it == container.end_order());
+        CHECK_THROWS_AS(++it, std::out_of_range); // Incrementing past end should throw
+    }
+    
+    SUBCASE("SideCrossOrder specific edge cases") {
+        MyContainer<int> container;
+        container.add(1);
+        
+        auto it = container.begin_side_cross_order();
+        CHECK(*it == 1);
+        ++it; // Should reach end
+        CHECK(it == container.end_side_cross_order());
+        CHECK_THROWS_AS(++it, std::out_of_range); // Past end increment
+    }
+    
+    SUBCASE("MiddleOutOrder edge expansion") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        container.add(3);
+        container.add(4);
+        container.add(5);
+        
+        vector<int> result;
+        for (auto it = container.begin_middle_out_order(); it != container.end_middle_out_order(); ++it) {
+            result.push_back(*it);
+        }
+        
+        // Middle out from index 2 (element 3): 3, 2, 4, 1, 5
+        CHECK(result.size() == 5);
+        CHECK(result[0] == 3); // Middle element
+    }
+}
+
+TEST_CASE("Large Container Performance Edge Cases") {
+    SUBCASE("Large container with duplicates") {
+        MyContainer<int> container;
+        for (int i = 0; i < 100; ++i) {
+            container.add(i % 10); // Add lots of duplicates
+        }
+        
+        CHECK(container.size() == 100);
+        
+        // Remove all instances of a duplicate value
+        container.remove(5);
+        CHECK(container.size() == 90); // Should remove 10 instances
+        
+        // Test that iterators still work with large containers
+        vector<int> asc_result;
+        for (auto it = container.begin_ascending_order(); it != container.end_ascending_order(); ++it) {
+            asc_result.push_back(*it);
+        }
+        CHECK(asc_result.size() == 90);
+        CHECK(std::is_sorted(asc_result.begin(), asc_result.end()));
+    }
+}
+
+TEST_CASE("Type-Specific Edge Cases") {
+    SUBCASE("Character container") {
+        MyContainer<char> container;
+        container.add('z');
+        container.add('a');
+        container.add('m');
+        
+        vector<char> asc_result;
+        for (auto it = container.begin_ascending_order(); it != container.end_ascending_order(); ++it) {
+            asc_result.push_back(*it);
+        }
+        
+        vector<char> expected = {'a', 'm', 'z'};
+        CHECK(asc_result == expected);
+    }
+    
+    SUBCASE("Float precision edge cases") {
+        MyContainer<float> container;
+        container.add(1.1f);
+        container.add(1.100001f); // Very close values
+        container.add(1.0999999f);
+        
+        CHECK(container.size() == 3); // All should be treated as different
+        
+        vector<float> asc_result;
+        for (auto it = container.begin_ascending_order(); it != container.end_ascending_order(); ++it) {
+            asc_result.push_back(*it);
+        }
+        CHECK(asc_result.size() == 3);
+        CHECK(std::is_sorted(asc_result.begin(), asc_result.end()));
+    }
+}
+
+TEST_CASE("Container State After Operations") {
+    SUBCASE("Container state after copy") {
+        MyContainer<int> original;
+        original.add(1);
+        original.add(2);
+        
+        MyContainer<int> copy = original;
+        original.add(3); // Modify original
+        
+        CHECK(original.size() == 3); // Original should have 3 elements
+        CHECK(copy.size() == 2); // Copy should still have 2 elements
+        
+        // Verify copy is independent
+        vector<int> copy_result;
+        for (auto it = copy.begin_order(); it != copy.end_order(); ++it) {
+            copy_result.push_back(*it);
+        }
+        CHECK(copy_result == vector<int>({1, 2}));
+    }
+    
+    SUBCASE("Container state after assignment") {
+        MyContainer<int> container1;
+        container1.add(1);
+        container1.add(2);
+        
+        MyContainer<int> container2;
+        container2.add(99);
+        container2.add(88);
+        container2.add(77);
+        
+        container2 = container1; // Assignment
+        CHECK(container2.size() == 2); // Should match container1
+        
+        container1.add(3); // Modify container1
+        CHECK(container2.size() == 2); // container2 should be unaffected
+    }
+    
+    SUBCASE("Self-assignment safety") {
+        MyContainer<int> container;
+        container.add(1);
+        container.add(2);
+        
+        container = container; // Self-assignment
+        CHECK(container.size() == 2); // Should be unchanged
+        
+        vector<int> result;
+        for (auto it = container.begin_order(); it != container.end_order(); ++it) {
+            result.push_back(*it);
+        }
+        CHECK(result == vector<int>({1, 2})); // Content should be intact
+    }
+}
+

@@ -4,15 +4,16 @@
 
 ## Project Overview
 
-This project implements a generic template-based container class `MyContainer` in C++ with support for multiple custom iterator types. The container supports dynamic addition and removal of comparable elements (integers, doubles, strings, etc.) and provides six different iteration patterns.
+This project implements a generic template-based container class `MyContainer` in C++ with support for six custom iterator types that are implemented as inner class (per ). The container supports dynamic addition and removal of comparable elements (integers, doubles, strings, etc.) and provides six different iteration patterns.
 
 ## Features
 
 ### Core Container Operations
-- **Dynamic Element Management**: Add and remove elements at runtime
+- **add**: Adds a given object to the container.
+- **remove**: By a given object, and removes it from the container, if there is any duplicates, the container removes them too. Throws error for invalid object.
+- **size**: Returns container size.
+- **operator<<**: Enables to print the container objects
 - **Template Support**: Works with any comparable type (int, double, string, etc.)
-- **Exception Handling**: Robust error handling with appropriate exceptions
-- **Memory Safe**: No memory leaks (validated with valgrind)
 
 ### Six Iterator Types
 1. **Order Iterator**: Traverses elements in insertion order
@@ -41,7 +42,7 @@ Each iterator class implements:
 - **Constructor**: Takes container pointer and index
 - **Copy Constructor**: Deep copy semantics
 - **Destructor**: Automatic cleanup
-- **Dereference Operators**: `operator*()` and `const operator*()`
+- **Dereference Operators**: `operator*()`
 - **Increment Operators**: Pre-increment `++it` and post-increment `it++`
 - **Comparison Operators**: `operator==()` and `operator!=()`
 - **Assignment Operator**: `operator=()`
@@ -55,8 +56,8 @@ The implementation provides comprehensive error handling:
 - **Null Pointer**: All iterator constructors validate non-null container pointers
 
 ### Iterator Operations
-- **Dereferencing**: Throws `std::out_of_range` when dereferencing end iterator
-- **Increment**: Throws `std::out_of_range` when incrementing past end
+- **Dereferencing (operator *)**: Throws `std::out_of_range` when dereferencing end iterator
+- **Increment (operator++)**: Throws `std::out_of_range` when incrementing past end
 - **Empty Container**: Handling of empty container edge cases
 
 ## Test Coverage
