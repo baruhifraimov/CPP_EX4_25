@@ -1008,8 +1008,8 @@ TEST_CASE("Type-Specific Edge Cases") {
     SUBCASE("Float precision edge cases") {
         MyContainer<float> container;
         container.add(1.1f);
-        container.add(1.100001f); // Very close values
-        container.add(1.0999999f);
+        container.add(1.100001); // Very close values
+        container.add(1.0999999);
         
         CHECK(container.size() == 3); // All should be treated as different
         
