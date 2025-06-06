@@ -16,14 +16,25 @@ $(TARGET): main.cpp
 valgrind: $(TARGET)
 	valgrind --leak-check=full --show-leak-kinds=all ./$(TARGET)
 
-# Test build
-test:
-	@echo "NOT YET IMPLEMENTED!"
+# Test build and run
+test: test.cpp
+	$(CXX) $(CXXFLAGS) -o test.out test.cpp
+	./test.out
+
+# Build test executable only
+test-build: test.cpp
+	$(CXX) $(CXXFLAGS) -o test.out test.cpp
+
+# Main target (for README requirement: make Main)
+Main: $(TARGET)
+	./$(TARGET)
 
 # Clean up built files
 clean:
 	@rm -f $(TARGET)
 	@rm -rf $(TARGET).dSYM
+	@rm -f test.out
+	@rm -rf test.out.dSYM
 
 # Tell make these aren't file names
-.PHONY: all clean valgrind test
+.PHONY: all clean valgrind test test-build Main
